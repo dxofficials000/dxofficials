@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dxofficials-v1';
+const CACHE_NAME = 'dxofficials-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
