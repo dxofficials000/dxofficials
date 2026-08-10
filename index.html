@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David Alieze — DxOfficials | Interactive 3D & AI Innovation</title>
+
+    <meta name="google-site-verification" content="googleb591a69feff8e6a3.html" />
+
+    <meta name="description" content="Official portfolio of David Alieze, 17-year-old AI developer and founder of DxOfficials. Specializing in high-performance interactive 3D web applications and small business AI solutions.">
+    <meta name="keywords" content="David Alieze, DxOfficials, David Alieze developer, David Alieze AI, David Alieze web designer, 3D web developer">
+    <meta name="author" content="David Alieze">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://dxofficials.com/#person",
+          "name": "David Alieze",
+          "alternateName": "David Alieze DxOfficials",
+          "jobTitle": "AI & 3D Web Developer",
+          "knowsAbout": ["3D Web Engineering", "Artificial Intelligence", "Web Development"],
+          "worksFor": {
+            "@type": "Organization",
+            "name": "DxOfficials"
+          }
+        },
+        {
+          "@type": "Organization",
+          "name": "DxOfficials",
+          "founder": {
+            "@type": "Person",
+            "name": "David Alieze"
+          },
+          "description": "Interactive 3D web applications and AI tools built by David Alieze."
+        }
+      ]
+    }
+    </script>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF003C">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        :root {
+            --neon-red: #FF003C;
+            --neon-cyan: #00F0FF;
+            --neon-purple: #7928CA;
+            --bg-dark: #030508;
+            --card-bg: rgba(10, 14, 23, 0.65);
+            --border-glow: rgba(255, 0, 60, 0.3);
+            --text-light: #F8FAFC;
+            --text-muted: #94A3B8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- 3D CANVAS STYLING --- */
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: auto;
+        }
+
+        /* --- OVERLAY CONTENT --- */
+        .content-layer {
+            position: relative;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .interactive-element {
+            pointer-events: auto;
+        }
+
+        /* --- KEYFRAME ANIMATIONS --- */
+        @keyframes dance {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            15% { transform: translateY(-12px) rotate(-14deg) scale(1.1); }
+            30% { transform: translateY(0) rotate(14deg) scale(1.05); }
+            45% { transform: translateY(-8px) rotate(-10deg) scale(1.1); }
+            60% { transform: translateY(0) rotate(10deg) scale(1); }
+        }
+
+        @keyframes ripple {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6), 0 0 0 20px rgba(37, 211, 102, 0.2); }
+            100% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0.2), 0 0 0 40px rgba(37, 211, 102, 0); }
+        }
+
+        @keyframes glowText {
+            0%, 100% { text-shadow: 0 0 15px rgba(255,0,60,0.8), 0 0 30px rgba(255,0,60,0.5); }
+            50% { text-shadow: 0 0 25px rgba(255,0,60,1), 0 0 50px rgba(0,240,255,0.8); }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(3, 5, 8, 0.75);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 22px 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--neon-red);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            animation: glowText 4s infinite alternate;
+        }
+
+        .logo span { color: #FFF; }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 12px var(--neon-cyan);
+        }
+
+        .btn-nav {
+            background: linear-gradient(135deg, var(--neon-red), var(--neon-purple));
+            color: #FFF;
+            padding: 12px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-nav:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 0 35px rgba(255, 0, 60, 0.8);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            padding: 180px 8% 100px 8%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .badge {
+            background: rgba(255, 0, 60, 0.12);
+            color: var(--neon-red);
+            border: 1px solid var(--border-glow);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            box-shadow: 0 0 25px rgba(255, 0, 60, 0.25);
+        }
+
+        .hero h1 {
+            font-size: 4.2rem;
+            font-weight: 900;
+            color: #FFF;
+            line-height: 1.1;
+            max-width: 980px;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--neon-red), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 40px;
+        }
+
+        .hint-text {
+            font-size: 0.85rem;
+            color: var(--neon-cyan);
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-red), #B3002D);
+            color: #FFF;
+            padding: 18px 44px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.05rem;
+            box-shadow: 0 0 30px rgba(255, 0, 60, 0.6);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.04);
+            box-shadow: 0 0 50px var(--neon-red), 0 0 90px rgba(255, 0, 60, 0.7);
+        }
+
+        /* --- ABOUT FOUNDER SECTION --- */
+        .about {
+            padding: 120px 8%;
+            perspective: 1000px;
+        }
+
+        .about-card {
+            max-width: 920px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--border-glow);
+            border-radius: 32px;
+            padding: 60px 50px;
+            text-align: center;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .about-card:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.35);
+        }
+
+        .about-card h2 {
+            font-size: 2.6rem;
+            font-weight: 900;
+            color: #FFF;
+            margin-bottom: 20px;
+        }
+
+        .about-card h2 span { color: var(--neon-red); }
+
+        .about-card p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.85;
+        }
+
+        .about-card p strong { color: #FFF; }
+
+        /* --- SERVICES SECTION --- */
+        .services {
+            padding: 100px 8%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #FFF;
+        }
+
+        .section-header h2 span { color: var(--neon-red); }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 32px;
+            perspective: 1000px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 45px 35px;
+            border-radius: 26px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-card:hover {
+            border-color: var(--neon-red);
+            box-shadow: 0 0 35px rgba(255, 0, 60, 0.4);
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 0, 60, 0.15);
+            color: var(--neon-red);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            margin-bottom: 28px;
+            border: 1px solid var(--border-glow);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .icon-box {
+            background: var(--neon-red);
+            color: #FFF;
+            box-shadow: 0 0 30px var(--neon-red);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 14px;
+            color: #FFF;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 60px 8% 30px 8%;
+            border-top: 1px solid var(--border-glow);
+            text-align: center;
+            background: rgba(3, 5, 8, 0.95);
+        }
+
+        footer p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 24px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* --- DANCING WHATSAPP BUTTON --- */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 35px;
+            right: 35px;
+            width: 72px;
+            height: 72px;
+            background-color: #25D366;
+            color: #FFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            z-index: 9999;
+            text-decoration: none;
+            animation: dance 2.5s infinite ease-in-out, ripple 2s infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            animation-play-state: paused;
+            transform: scale(1.25);
+            box-shadow: 0 0 50px #25D366;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div class="content-layer">
+        <nav class="interactive-element">
+            <a href="#" class="logo">Dx<span>Officials</span></a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">Founder</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="https://wa.me/2349135580184?text=Hello%20David%20Alieze,%20I%20need%20a%20website" class="btn-nav" target="_blank">Get a Site</a>
+        </nav>
+
+        <section class="hero" id="home">
+            <span class="badge interactive-element">AI & Interactive 3D Engineering</span>
+            <h1 class="interactive-element">DxOfficials — Founded by <span>David Alieze</span></h1>
+            <p class="interactive-element">David Alieze builds ultra-fast, interactive 3D web applications and embeds custom AI tools engineered to elevate small business sales globally.</p>
+            <div class="hint-text interactive-element"><i class="fa-solid fa-hand-pointer"></i> Click & Drag Background to Rotate 3D Core</div>
+            <a href="https://wa.me/2349135580184?text=Hello%20David%20Alieze,%20I%20would%20like%20to%20build%20a%20website" class="btn-primary interactive-element" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i> Chat With David Alieze
+            </a>
+        </section>
+
+        <section class="about" id="about">
+            <div class="about-card tilt-card interactive-element">
+                <span class="badge">The Visionary Developer</span>
+                <h2>Meet The Founder — <span>David Alieze</span></h2>
+                <p>
+                    <strong>DxOfficials</strong> was founded by <strong>David Alieze</strong>. At just 17 years old, David Alieze is a software developer focused on integrating <strong>Artificial Intelligence & interactive 3D web technology into small businesses</strong>—helping brands automate client communication and dominate their online industries.
+                </p>
+            </div>
+        </section>
+
+        <section class="services" id="services">
+            <div class="section-header interactive-element">
+                <h2>Services by <span>David Alieze</span></h2>
+            </div>
+            <div class="services-grid">
+                <div class="service-card tilt-card interactive-element">
+                    <div class="icon-box"><i class="fa-solid fa-cube"></i></div>
+                    <h3>Interactive 3D Web Apps</h3>
+                    <p>Custom 3D environments coded by David Alieze that visitors can rotate and interact with in real time.</p>
+                </div>
+                <div class="service-card tilt-card interactive-element">
+                    <div class="icon-box"><i class="fa-solid fa-brain"></i></div>
+                    <h3>AI Integration</h3>
+                    <p>Embedding tailored AI models into business workflows to run sales and automated support 24/7.</p>
+                </div>
+                <div class="service-card tilt-card interactive-element">
+                    <div class="icon-box"><i class="fa-brands fa-whatsapp"></i></div>
+                    <h3>Direct WhatsApp Commerce</h3>
+                    <p>Seamless lead capture systems engineered to send buyer requests directly to your phone.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer id="contact" class="interactive-element">
+            <a href="#" class="logo">Dx<span>Officials</span></a>
+            <p>Designed & Coded by David Alieze — AI & 3D Web Innovation</p>
+            <div class="copyright">
+                <p>&copy; 2026 DxOfficials. All Rights Reserved.</p>
+            </div>
+        </footer>
+
+        <a href="https://wa.me/2349135580184?text=Hello%20David%20Alieze,%20I%20want%20to%20build%20a%20website" class="whatsapp-float interactive-element" target="_blank" title="Contact David Alieze on WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('webgl-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 6;
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.enableZoom = false;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.2;
+
+        const group = new THREE.Group();
+
+        // Torus Knot (Glow Red Wireframe)
+        const knotGeometry = new THREE.TorusKnotGeometry(1.5, 0.35, 120, 16);
+        const knotMaterial = new THREE.MeshBasicMaterial({ color: 0xFF003C, wireframe: true });
+        const torusKnot = new THREE.Mesh(knotGeometry, knotMaterial);
+        group.add(torusKnot);
+
+        // Outer Cyber Ring (Cyan Wireframe)
+        const ringGeometry = new THREE.TorusGeometry(2.8, 0.05, 16, 100);
+        const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x00F0FF, wireframe: true });
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.rotation.x = Math.PI / 2;
+        group.add(ring);
+
+        // Floating 3D Star Particle Field
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 400;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 18;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.04,
+            color: 0xFF003C,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        scene.add(group);
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 3D Card Parallax Effect
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                card.style.transform = `rotateY(${x / 18}deg) rotateX(${-y / 18}deg)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            });
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            group.rotation.y += 0.003;
+            particlesMesh.rotation.y -= 0.0008;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+
+</body>
+</html>
