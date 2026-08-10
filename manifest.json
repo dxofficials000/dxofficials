@@ -1,0 +1,25 @@
+{
+  "name": "DxOfficials — David Alieze",
+  "short_name": "DxOfficials",
+  "description": "Interactive 3D Web Apps & AI Innovation by David Alieze.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#030508",
+  "theme_color": "#FF003C",
+  "icons": [
+    {
+      "src": "bicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "bicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
